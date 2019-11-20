@@ -1,28 +1,36 @@
 <template>
   <div class="container">
     <h1>Please login to see the secret content</h1>
-    <form v-if="!$store.state.authUser" @submit.prevent="login">
+    <form v-if="!$store.state.authUser">
       <p v-if="formError" class="error">
         {{ formError }}
       </p>
       <p>
-        <i
-          >To login, use <b>demo</b> as username and <b>demo</b> as password.</i
-        >
+        <i>To login, use <b>demo</b> as email and <b>demo</b> as password.</i>
       </p>
-      <p>
-        Username: <input v-model="formUsername" type="text" name="username" />
-      </p>
+      <p>Email: <input v-model="formEmail" type="text" name="email" /></p>
       <p>
         Password:
         <input v-model="formPassword" type="password" name="password" />
       </p>
-      <button type="submit">
+      <button @click.prevent="login" type="submit">
         Login
       </button>
+      <a href="/auth/facebook">
+        Login With Facebook
+      </a>
+      <a href="/auth/twitter">
+        Login With Twitter
+      </a>
+      <a href="/auth/google">
+        Login With Google
+      </a>
+      <a href="/auth/github">
+        Login With GitHub
+      </a>
     </form>
     <div v-else>
-      Hello {{ $store.state.authUser.username }}!
+      Hello {{ $store.state.authUser.email }}!
       <pre>
 I am the secret content, I am shown only when the user is connected.</pre
       >
@@ -44,7 +52,7 @@ export default {
   data() {
     return {
       formError: null,
-      formUsername: '',
+      formEmail: '',
       formPassword: ''
     }
   },
@@ -52,10 +60,10 @@ export default {
     async login() {
       try {
         await this.$store.dispatch('login', {
-          username: this.formUsername,
+          email: this.formEmail,
           password: this.formPassword
         })
-        this.formUsername = ''
+        this.formEmail = ''
         this.formPassword = ''
         this.formError = null
       } catch (e) {

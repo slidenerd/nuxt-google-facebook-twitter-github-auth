@@ -1,6 +1,6 @@
 # auth
 
-> My classy Nuxt.js project
+> Nuxt.js authentication using express-session and connect-redis with support for Facebook, Twitter, Google and GitHub Login. No databases have been added to this library so you'll have to add your database to the authentication strategies in order to make it truly work. Use 'demo' as the username and password to do local login, add your client secret and client id to the server/config/.env.* files to perform the actual social login. Redis is using database 1 for sessions and a password on localhost, feel free to change those
 
 ## Build Setup
 
@@ -10,6 +10,9 @@ $ npm run install
 
 # serve with hot reload at localhost:3000
 $ npm run dev
+
+# serve with hot reload in debug mode at localhost:3000
+$ npm run deb
 
 # build for production and launch server
 $ npm run build
@@ -21,6 +24,215 @@ $ npm run generate
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
+### Objects
+#### Facebook Profile Object
+
+{
+    id: '5459754221345688',
+    username: undefined,
+    displayName: undefined,
+    name: {
+        familyName: 'XYZ',
+        givenName: 'abc',
+        middleName: undefined
+    },
+    gender: undefined,
+    profileUrl: undefined,
+    emails: [{
+        value: 'abc.officialr@gmail.com'
+    }],
+    provider: 'facebook',
+    _raw: '{"last_name":"XYZ","first_name":"abc","email":"abc.officialr\\u0040gmail.com","id":"5459754221345688"}',
+    _json: {
+        last_name: 'XYZ',
+        first_name: 'abc',
+        email: 'abc.officialr@gmail.com',
+        id: '5459754221345688'
+    }
+}
+
+#### Twitter Profile Object
+{
+    id: '466421541215451645',
+    username: 'username',
+    displayName: 'username',
+    emails: [{
+        value: 'username@gmail.com'
+    }],
+    photos: [{
+        value: 'https://pbs.twimg.com/profile_images/154854541201858955/HhaZWgHj_normal.jpg'
+    }],
+    provider: 'twitter',
+    _raw: '{"id":466421541215451645,"id_str":"466421541215451645","name":"username","screen_name":"username","location":"","description":"dummy description","url":"https:\\/\\/t.co\\/MDQ6VXNlcj","entities":{"url":{"urls":[{"url":"https:\\/\\/t.co\\/MDQ6VXNlcj","expanded_url":"https:\\/\\/botlist.co\\/bots\\/username","display_url":"botlist.co\\/bots\\/username","indices":[0,23]}]},"description":{"urls":[]}},"protected":false,"followers_count":47,"friends_count":224,"listed_count":0,"created_at":"Thu Jun 22 06:04:19 +0000 2017","favourites_count":23,"utc_offset":null,"time_zone":null,"geo_enabled":false,"verified":false,"statuses_count":122,"lang":null,"status":{"created_at":"Wed May 08 14:16:09 +0000 2019","id":1126128657540403200,"id_str":"1126128657540403200","text":"RT helo world\\nhttps:\\/\\/t.co\\/4aYHFafgaGT","truncated":false,"entities":{"hashtags":[],"symbols":[],"user_mentions":[{"screen_name":"dummy","name":"dummy","id":2207129125,"id_str":"2207129125","indices":[3,17]}],"urls":[{"url":"https:\\/\\/t.co\\/4aYHFafgaGT","expanded_url":"https:\\/\\/dummy.com\\/news\\/dummy-link","display_url":"dummy.com\\/news\\/hackers-w\\u2026","indices":[87,110]}]},"source":"\\u003ca href=\\"http:\\/\\/twitter.com\\" rel=\\"nofollow\\"\\u003eTwitter Web Client\\u003c\\/a\\u003e","in_reply_to_status_id":null,"in_reply_to_status_id_str":null,"in_reply_to_user_id":null,"in_reply_to_user_id_str":null,"in_reply_to_screen_name":null,"geo":null,"coordinates":null,"place":null,"contributors":null,"retweeted_status":{"created_at":"Wed May 08 00:36:05 +0000 2019","id":1125922284013678592,"id_str":"1125922284013678592","text":"Hackers withdraw 7,000 bitcoins in Binance exchange security breach\\nhttps:\\/\\/t.co\\/4aYHFafgaGT","truncated":false,"entities":{"hashtags":[],"symbols":[],"user_mentions":[],"urls":[{"url":"https:\\/\\/t.co\\/4aYHFafgaGT","expanded_url":"https:\\/\\/dummy.com\\/news\\/dummy-link","display_url":"dummy.com\\/news\\/hackers-w\\u2026","indices":[68,91]}]},"source":"\\u003ca href=\\"https:\\/\\/amplifr.com\\" rel=\\"nofollow\\"\\u003eAmplifr\\u003c\\/a\\u003e","in_reply_to_status_id":null,"in_reply_to_status_id_str":null,"in_reply_to_user_id":null,"in_reply_to_user_id_str":null,"in_reply_to_screen_name":null,"geo":null,"coordinates":null,"place":null,"contributors":null,"is_quote_status":false,"retweet_count":157,"favorite_count":255,"favorited":false,"retweeted":true,"possibly_sensitive":false,"lang":"en"},"is_quote_status":false,"retweet_count":157,"favorite_count":0,"favorited":false,"retweeted":true,"possibly_sensitive":false,"lang":"en"},"contributors_enabled":false,"is_translator":false,"is_translation_enabled":false,"profile_background_color":"F5F8FA","profile_background_image_url":null,"profile_background_image_url_https":null,"profile_background_tile":false,"profile_image_url":"http:\\/\\/pbs.twimg.com\\/profile_images\\/154854541201858955\\/HhaZWgHj_normal.jpg","profile_image_url_https":"https:\\/\\/pbs.twimg.com\\/profile_images\\/154854541201858955\\/HhaZWgHj_normal.jpg","profile_banner_url":"https:\\/\\/pbs.twimg.com\\/profile_banners\\/466421541215451645\\/1501313804","profile_link_color":"1DA1F2","profile_sidebar_border_color":"C0DEED","profile_sidebar_fill_color":"DDEEF6","profile_text_color":"333333","profile_use_background_image":true,"has_extended_profile":false,"default_profile":true,"default_profile_image":false,"can_media_tag":true,"followed_by":false,"following":false,"follow_request_sent":false,"notifications":false,"translator_type":"none","suspended":false,"needs_phone_verification":false,"email":"username@gmail.com"}',
+    _json: {
+        id: 877769196762914800,
+        id_str: '466421541215451645',
+        name: 'username',
+        screen_name: 'username',
+        location: '',
+        description: 'dummy description',
+        url: 'https://t.co/MDQ6VXNlcj',
+        entities: {
+            url: [Object],
+            description: [Object]
+        },
+        protected: false,
+        followers_count: 47,
+        friends_count: 224,
+        listed_count: 0,
+        created_at: 'Thu Jun 22 06:04:19 +0000 2017',
+        favourites_count: 23,
+        utc_offset: null,
+        time_zone: null,
+        geo_enabled: false,
+        verified: false,
+        statuses_count: 122,
+        lang: null,
+        status: {
+            created_at: 'Wed May 08 14:16:09 +0000 2019',
+            id: 1126128657540403200,
+            id_str: '1126128657540403200',
+            text: 'RT helo world',
+            truncated: false,
+            entities: [Object],
+            source: '<a href="http://twitter.com" rel="nofollow">Twitter Web Client</a>',
+            in_reply_to_status_id: null,
+            in_reply_to_status_id_str: null,
+            in_reply_to_user_id: null,
+            in_reply_to_user_id_str: null,
+            in_reply_to_screen_name: null,
+            geo: null,
+            coordinates: null,
+            place: null,
+            contributors: null,
+            retweeted_status: [Object],
+            is_quote_status: false,
+            retweet_count: 157,
+            favorite_count: 0,
+            favorited: false,
+            retweeted: true,
+            possibly_sensitive: false,
+            lang: 'en'
+        },
+        contributors_enabled: false,
+        is_translator: false,
+        is_translation_enabled: false,
+        profile_background_color: 'F5F8FA',
+        profile_background_image_url: null,
+        profile_background_image_url_https: null,
+        profile_background_tile: false,
+        profile_image_url: 'http://pbs.twimg.com/profile_images/154854541201858955/HhaZWgHj_normal.jpg',
+        profile_image_url_https: 'https://pbs.twimg.com/profile_images/154854541201858955/HhaZWgHj_normal.jpg',
+        profile_banner_url: 'https://pbs.twimg.com/profile_banners/466421541215451645/1501313804',
+        profile_link_color: '1DA1F2',
+        profile_sidebar_border_color: 'C0DEED',
+        profile_sidebar_fill_color: 'DDEEF6',
+        profile_text_color: '333333',
+        profile_use_background_image: true,
+        has_extended_profile: false,
+        default_profile: true,
+        default_profile_image: false,
+        can_media_tag: true,
+        followed_by: false,
+        following: false,
+        follow_request_sent: false,
+        notifications: false,
+        translator_type: 'none',
+        suspended: false,
+        needs_phone_verification: false,
+        email: 'username@gmail.com'
+    },
+    _accessLevel: 'read-write'
+}
+
+#### Google Profile Object
+{
+    provider: 'google',
+    sub: '45684644664512633259',
+    id: '45684644664512633259',
+    displayName: 'Random Name',
+    name: {
+        givenName: 'Random',
+        familyName: 'Name'
+    },
+    given_name: 'Random',
+    family_name: 'Name',
+    email_verified: true,
+    verified: true,
+    language: 'en',
+    locale: undefined,
+    email: 'abc.9891@gmail.com',
+    emails: [{
+        value: 'abc.9891@gmail.com',
+        type: 'account'
+    }],
+    photos: [{
+        value: 'https://lh3.googleusercontent.com/a-/BoG15864BVcYCNJikZpTTuVX789452314510BHiJKlMnIpQ',
+        type: 'default'
+    }],
+    picture: 'https://lh3.googleusercontent.com/a-/BoG15864BVcYCNJikZpTTuVX789452314510BHiJKlMnIpQ',
+    _raw: '{\n  "sub": "45684644664512633259",\n  "name": "Random Name",\n  "given_name": "Random",\n  "family_name": "Name",\n  "picture": "https://lh3.googleusercontent.com/a-/BoG15864BVcYCNJikZpTTuVX789452314510BHiJKlMnIpQ",\n  "email": "abc.9891@gmail.com",\n  "email_verified": true,\n  "locale": "en"\n}',
+    _json: {
+        sub: '45684644664512633259',
+        name: 'Random Name',
+        given_name: 'Random',
+        family_name: 'Name',
+        picture: 'https://lh3.googleusercontent.com/a-/BoG15864BVcYCNJikZpTTuVX789452314510BHiJKlMnIpQ',
+        email: 'abc.9891@gmail.com',
+        email_verified: true,
+        locale: 'en'
+    }
+}
+
+#### GitHub Profile Object
+
+{
+    id: '3194523',
+    displayName: 'dummyboy',
+    username: 'dummyboy',
+    profileUrl: 'https://github.com/dummyboy',
+    emails: [{
+        value: 'dummyboy@gmail.com'
+    }],
+    photos: [{
+        value: 'https://avatars3.githubusercontent.com/u/3194523?v=4'
+    }],
+    provider: 'github',
+    _raw: '{"login":"dummyboy","id":3194523,"node_id":"ADQ541NiCUjKLmaaNgaA=","avatar_url":"https://avatars3.githubusercontent.com/u/3194523?v=4","gravatar_id":"","url":"https://api.github.com/users/dummyboy","html_url":"https://github.com/dummyboy","followers_url":"https://api.github.com/users/dummyboy/followers","following_url":"https://api.github.com/users/dummyboy/following{/other_user}","gists_url":"https://api.github.com/users/dummyboy/gists{/gist_id}","starred_url":"https://api.github.com/users/dummyboy/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/dummyboy/subscriptions","organizations_url":"https://api.github.com/users/dummyboy/orgs","repos_url":"https://api.github.com/users/dummyboy/repos","events_url":"https://api.github.com/users/dummyboy/events{/privacy}","received_events_url":"https://api.github.com/users/dummyboy/received_events","type":"User","site_admin":false,"name":"dummyboy","company":"dummyboy","blog":"http://dummyboy.com","location":"Mars","email":"dummyboy@gmail.com","hireable":true,"bio":"Dummy boi rules","public_repos":74,"public_gists":6,"followers":50000,"following":1,"created_at":"2013-08-01T14:17:19Z","updated_at":"2019-11-08T13:35:04Z"}',
+    _json: {
+        login: 'dummyboy',
+        id: 3194523,
+        node_id: 'ADQ541NiCUjKLmaaNgaA=',
+        avatar_url: 'https://avatars3.githubusercontent.com/u/3194523?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/dummyboy',
+        html_url: 'https://github.com/dummyboy',
+        followers_url: 'https://api.github.com/users/dummyboy/followers',
+        following_url: 'https://api.github.com/users/dummyboy/following{/other_user}',
+        gists_url: 'https://api.github.com/users/dummyboy/gists{/gist_id}',
+        starred_url: 'https://api.github.com/users/dummyboy/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/dummyboy/subscriptions',
+        organizations_url: 'https://api.github.com/users/dummyboy/orgs',
+        repos_url: 'https://api.github.com/users/dummyboy/repos',
+        events_url: 'https://api.github.com/users/dummyboy/events{/privacy}',
+        received_events_url: 'https://api.github.com/users/dummyboy/received_events',
+        type: 'User',
+        site_admin: false,
+        name: 'dummyboy',
+        company: 'dummyboy',
+        blog: 'http://dummyboy.com',
+        location: 'Mars',
+        email: 'dummyboy@gmail.com',
+        hireable: true,
+        bio: 'Dummy boi rules',
+        public_repos: 74,
+        public_gists: 6,
+        followers: 50000,
+        following: 1,
+        created_at: '2013-08-01T14:17:19Z',
+        updated_at: '2019-11-08T13:35:04Z'
+    }
+}
 
 ## Resources
 ### Locations
@@ -58,6 +270,8 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - https://stackoverflow.com/questions/38954821/preventing-csrf-with-the-same-site-cookie-attribute/38957177#38957177 Preventing CSRF with the same-site cookie attribute
 - https://security.stackexchange.com/questions/26481/web-application-cookie-expiry Web Application - Cookie Expiry
 - https://security.stackexchange.com/questions/41/good-session-practices Good session practices
+- https://stackoverflow.com/questions/43452896/authentication-jwt-usage-vs-session Authentication: JWT usage vs session
+- https://stackoverflow.com/questions/40200413/sessions-vs-token-based-authentication Sessions vs. Token based authentication
 
 ### SCSS
 - https://medium.com/developing-with-sass/creating-a-dead-simple-sass-mixin-to-handle-responsive-breakpoints-889927b37740 Creating a Dead Simple Sass Mixin to Handle Responsive Breakpoints
@@ -90,6 +304,8 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - https://stackoverflow.com/questions/31385726/whats-the-difference-between-saveuninitialized-and-resave What's the difference between saveUninitialized and resave?
 - https://github.com/expressjs/session/issues/445 ReplyError: ERR invalid expire time in set - using connect-redis
 - https://github.com/expressjs/session/issues/189 cookie.expires goes back to original value on each reques
+- https://github.com/tj/connect-redis/issues/178 Feature request: Possibility to have a callback on session expire
+- https://stackoverflow.com/questions/23413401/what-does-trust-proxy-actually-do-in-express-js-and-do-i-need-to-use-it What does “trust proxy” actually do in express.js, and do I need to use it?
 
 ### Redis
 - https://redis.io/topics/rediscli redis-cli, the Redis command line interface
@@ -118,282 +334,3 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - https://github.com/nuxt/nuxt.js/issues/2796 nuxtServerInit running on every time index page is reload
 - https://github.com/nuxt/todomvc Nuxt.js TodoMVC Example
 - https://github.com/nuxt/nuxt.js/issues?page=1&q=express-session&utf8=%E2%9C%93 Questions related to express-session in Nuxt
-
-ReplyError: ERR invalid expire time in set
-at new Command (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/redis/lib/command.js:12:22)
-at RedisClient.set (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/redis/lib/commands.js:58:47)
-at RedisStore.set (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/connect-redis/lib/connect-redis.js:58:19)
-at Session.save (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/express-session/session/session.js:72:25)
-at Session.save (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/express-session/index.js:395:15)
-at ServerResponse.end (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/express-session/index.js:331:21)
-at IncomingMessage.<anonymous> (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/webpack-hot-middleware/middleware.js:105:32)
-at IncomingMessage.emit (events.js:198:13)
-at IncomingMessage.EventEmitter.emit (domain.js:448:20)
-at abortIncoming (_http_server.js:449:9)
-at socketOnEnd (_http_server.js:464:5)
-at Socket.emit (events.js:203:15)
-at Socket.EventEmitter.emit (domain.js:448:20)
-at endReadableNT (_stream_readable.js:1145:12)
-at process._tickCallback (internal/process/next_tick.js:63:19)
-
-Error: Failed to serialize user into session
-at pass (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/passport/lib/authenticator.js:281:19)
-at serialized (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/passport/lib/authenticator.js:286:7)
-at passport.serializeUser (/Users/zup/Desktop/code/ACTIVE/auth-routes/server/config/passport.js:7:3)
-at pass (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/passport/lib/authenticator.js:294:9)
-at Authenticator.serializeUser (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/passport/lib/authenticator.js:299:5)
-at SessionManager.logIn (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/passport/lib/sessionmanager.js:14:8)
-at IncomingMessage.req.login.req.logIn (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/passport/lib/http/request.js:50:33)
-at Strategy.strategy.success (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/passport/lib/middleware/authenticate.js:248:13)
-at verified (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/passport-oauth2/lib/strategy.js:186:20)
-at Strategy.passport.use.FacebookStrategy [as _verify] (/Users/zup/Desktop/code/ACTIVE/auth-routes/server/config/passport.js:50:7)
-at /Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/passport-oauth2/lib/strategy.js:195:24
-at /Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/passport-facebook/lib/strategy.js:183:5
-at passBackControl (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/oauth/lib/oauth2.js:134:9)
-at IncomingMessage.<anonymous> (/Users/zup/Desktop/code/ACTIVE/auth-routes/node_modules/oauth/lib/oauth2.js:157:7)
-at IncomingMessage.emit (events.js:203:15)
-at IncomingMessage.EventEmitter.emit (domain.js:448:20)
-
-### Objects
-#### Facebook Profile Object
-
-{
-    id: '2563240293762961',
-    username: undefined,
-    displayName: undefined,
-    name: {
-        familyName: 'Ramesh',
-        givenName: 'Vivek',
-        middleName: undefined
-    },
-    gender: undefined,
-    profileUrl: undefined,
-    emails: [{
-        value: 'vivek.officialr@gmail.com'
-    }],
-    provider: 'facebook',
-    _raw: '{"last_name":"Ramesh","first_name":"Vivek","email":"vivek.officialr\\u0040gmail.com","id":"2563240293762961"}',
-    _json: {
-        last_name: 'Ramesh',
-        first_name: 'Vivek',
-        email: 'vivek.officialr@gmail.com',
-        id: '2563240293762961'
-    }
-}
-
-#### Twitter Profile Object
-{
-    id: '877769196762914816',
-    username: 'zupcoin',
-    displayName: 'Zupcoin',
-    emails: [{
-        value: 'zupcoin@gmail.com'
-    }],
-    photos: [{
-        value: 'https://pbs.twimg.com/profile_images/877770003189161984/HhaZWgHj_normal.jpg'
-    }],
-    provider: 'twitter',
-    _raw: '{"id":877769196762914816,"id_str":"877769196762914816","name":"Zupcoin","screen_name":"zupcoin","location":"","description":"Zupcoin is a bot that lets you get the prices of any altcoin via messenger and track your investments","url":"https:\\/\\/t.co\\/0d4Ai4MANA","entities":{"url":{"urls":[{"url":"https:\\/\\/t.co\\/0d4Ai4MANA","expanded_url":"https:\\/\\/botlist.co\\/bots\\/zupcoin","display_url":"botlist.co\\/bots\\/zupcoin","indices":[0,23]}]},"description":{"urls":[]}},"protected":false,"followers_count":47,"friends_count":224,"listed_count":0,"created_at":"Thu Jun 22 06:04:19 +0000 2017","favourites_count":23,"utc_offset":null,"time_zone":null,"geo_enabled":false,"verified":false,"statuses_count":122,"lang":null,"status":{"created_at":"Wed May 08 14:16:09 +0000 2019","id":1126128657540403200,"id_str":"1126128657540403200","text":"RT @Cointelegraph: Hackers withdraw 7,000 bitcoins in Binance exchange security breach\\nhttps:\\/\\/t.co\\/3aXHAqY4TY","truncated":false,"entities":{"hashtags":[],"symbols":[],"user_mentions":[{"screen_name":"Cointelegraph","name":"Cointelegraph","id":2207129125,"id_str":"2207129125","indices":[3,17]}],"urls":[{"url":"https:\\/\\/t.co\\/3aXHAqY4TY","expanded_url":"https:\\/\\/cointelegraph.com\\/news\\/hackers-withdraw-7-000-bitcoins-in-binance-crypto-exchange-security-breach","display_url":"cointelegraph.com\\/news\\/hackers-w\\u2026","indices":[87,110]}]},"source":"\\u003ca href=\\"http:\\/\\/twitter.com\\" rel=\\"nofollow\\"\\u003eTwitter Web Client\\u003c\\/a\\u003e","in_reply_to_status_id":null,"in_reply_to_status_id_str":null,"in_reply_to_user_id":null,"in_reply_to_user_id_str":null,"in_reply_to_screen_name":null,"geo":null,"coordinates":null,"place":null,"contributors":null,"retweeted_status":{"created_at":"Wed May 08 00:36:05 +0000 2019","id":1125922284013678592,"id_str":"1125922284013678592","text":"Hackers withdraw 7,000 bitcoins in Binance exchange security breach\\nhttps:\\/\\/t.co\\/3aXHAqY4TY","truncated":false,"entities":{"hashtags":[],"symbols":[],"user_mentions":[],"urls":[{"url":"https:\\/\\/t.co\\/3aXHAqY4TY","expanded_url":"https:\\/\\/cointelegraph.com\\/news\\/hackers-withdraw-7-000-bitcoins-in-binance-crypto-exchange-security-breach","display_url":"cointelegraph.com\\/news\\/hackers-w\\u2026","indices":[68,91]}]},"source":"\\u003ca href=\\"https:\\/\\/amplifr.com\\" rel=\\"nofollow\\"\\u003eAmplifr\\u003c\\/a\\u003e","in_reply_to_status_id":null,"in_reply_to_status_id_str":null,"in_reply_to_user_id":null,"in_reply_to_user_id_str":null,"in_reply_to_screen_name":null,"geo":null,"coordinates":null,"place":null,"contributors":null,"is_quote_status":false,"retweet_count":157,"favorite_count":255,"favorited":false,"retweeted":true,"possibly_sensitive":false,"lang":"en"},"is_quote_status":false,"retweet_count":157,"favorite_count":0,"favorited":false,"retweeted":true,"possibly_sensitive":false,"lang":"en"},"contributors_enabled":false,"is_translator":false,"is_translation_enabled":false,"profile_background_color":"F5F8FA","profile_background_image_url":null,"profile_background_image_url_https":null,"profile_background_tile":false,"profile_image_url":"http:\\/\\/pbs.twimg.com\\/profile_images\\/877770003189161984\\/HhaZWgHj_normal.jpg","profile_image_url_https":"https:\\/\\/pbs.twimg.com\\/profile_images\\/877770003189161984\\/HhaZWgHj_normal.jpg","profile_banner_url":"https:\\/\\/pbs.twimg.com\\/profile_banners\\/877769196762914816\\/1501313804","profile_link_color":"1DA1F2","profile_sidebar_border_color":"C0DEED","profile_sidebar_fill_color":"DDEEF6","profile_text_color":"333333","profile_use_background_image":true,"has_extended_profile":false,"default_profile":true,"default_profile_image":false,"can_media_tag":true,"followed_by":false,"following":false,"follow_request_sent":false,"notifications":false,"translator_type":"none","suspended":false,"needs_phone_verification":false,"email":"zupcoin@gmail.com"}',
-    _json: {
-        id: 877769196762914800,
-        id_str: '877769196762914816',
-        name: 'Zupcoin',
-        screen_name: 'zupcoin',
-        location: '',
-        description: 'Zupcoin is a bot that lets you get the prices of any altcoin via messenger and track your investments',
-        url: 'https://t.co/0d4Ai4MANA',
-        entities: {
-            url: [Object],
-            description: [Object]
-        },
-        protected: false,
-        followers_count: 47,
-        friends_count: 224,
-        listed_count: 0,
-        created_at: 'Thu Jun 22 06:04:19 +0000 2017',
-        favourites_count: 23,
-        utc_offset: null,
-        time_zone: null,
-        geo_enabled: false,
-        verified: false,
-        statuses_count: 122,
-        lang: null,
-        status: {
-            created_at: 'Wed May 08 14:16:09 +0000 2019',
-            id: 1126128657540403200,
-            id_str: '1126128657540403200',
-            text: 'RT @Cointelegraph: Hackers withdraw 7,000 bitcoins in Binance exchange security breach\nhttps://t.co/3aXHAqY4TY',
-            truncated: false,
-            entities: [Object],
-            source: '<a href="http://twitter.com" rel="nofollow">Twitter Web Client</a>',
-            in_reply_to_status_id: null,
-            in_reply_to_status_id_str: null,
-            in_reply_to_user_id: null,
-            in_reply_to_user_id_str: null,
-            in_reply_to_screen_name: null,
-            geo: null,
-            coordinates: null,
-            place: null,
-            contributors: null,
-            retweeted_status: [Object],
-            is_quote_status: false,
-            retweet_count: 157,
-            favorite_count: 0,
-            favorited: false,
-            retweeted: true,
-            possibly_sensitive: false,
-            lang: 'en'
-        },
-        contributors_enabled: false,
-        is_translator: false,
-        is_translation_enabled: false,
-        profile_background_color: 'F5F8FA',
-        profile_background_image_url: null,
-        profile_background_image_url_https: null,
-        profile_background_tile: false,
-        profile_image_url: 'http://pbs.twimg.com/profile_images/877770003189161984/HhaZWgHj_normal.jpg',
-        profile_image_url_https: 'https://pbs.twimg.com/profile_images/877770003189161984/HhaZWgHj_normal.jpg',
-        profile_banner_url: 'https://pbs.twimg.com/profile_banners/877769196762914816/1501313804',
-        profile_link_color: '1DA1F2',
-        profile_sidebar_border_color: 'C0DEED',
-        profile_sidebar_fill_color: 'DDEEF6',
-        profile_text_color: '333333',
-        profile_use_background_image: true,
-        has_extended_profile: false,
-        default_profile: true,
-        default_profile_image: false,
-        can_media_tag: true,
-        followed_by: false,
-        following: false,
-        follow_request_sent: false,
-        notifications: false,
-        translator_type: 'none',
-        suspended: false,
-        needs_phone_verification: false,
-        email: 'zupcoin@gmail.com'
-    },
-    _accessLevel: 'read-write'
-}
-
-#### Google Profile Object
-{
-    provider: 'google',
-    sub: '118245659938717303439',
-    id: '118245659938717303439',
-    displayName: 'Vivz BloodTerror',
-    name: {
-        givenName: 'Vivz',
-        familyName: 'BloodTerror'
-    },
-    given_name: 'Vivz',
-    family_name: 'BloodTerror',
-    email_verified: true,
-    verified: true,
-    language: 'en',
-    locale: undefined,
-    email: 'vivek.9891@gmail.com',
-    emails: [{
-        value: 'vivek.9891@gmail.com',
-        type: 'account'
-    }],
-    photos: [{
-        value: 'https://lh3.googleusercontent.com/a-/AAuE7mC1vxq2qyVcvoCmM0aZpyTfvDq7TlU5Zz3At9sTog',
-        type: 'default'
-    }],
-    picture: 'https://lh3.googleusercontent.com/a-/AAuE7mC1vxq2qyVcvoCmM0aZpyTfvDq7TlU5Zz3At9sTog',
-    _raw: '{\n  "sub": "118245659938717303439",\n  "name": "Vivz BloodTerror",\n  "given_name": "Vivz",\n  "family_name": "BloodTerror",\n  "picture": "https://lh3.googleusercontent.com/a-/AAuE7mC1vxq2qyVcvoCmM0aZpyTfvDq7TlU5Zz3At9sTog",\n  "email": "vivek.9891@gmail.com",\n  "email_verified": true,\n  "locale": "en"\n}',
-    _json: {
-        sub: '118245659938717303439',
-        name: 'Vivz BloodTerror',
-        given_name: 'Vivz',
-        family_name: 'BloodTerror',
-        picture: 'https://lh3.googleusercontent.com/a-/AAuE7mC1vxq2qyVcvoCmM0aZpyTfvDq7TlU5Zz3At9sTog',
-        email: 'vivek.9891@gmail.com',
-        email_verified: true,
-        locale: 'en'
-    }
-}
-
-#### GitHub Profile Object
-
-{
-    id: '5139030',
-    displayName: 'slidenerd',
-    username: 'slidenerd',
-    profileUrl: 'https://github.com/slidenerd',
-    emails: [{
-        value: 'slidenerd@gmail.com'
-    }],
-    photos: [{
-        value: 'https://avatars3.githubusercontent.com/u/5139030?v=4'
-    }],
-    provider: 'github',
-    _raw: '{"login":"slidenerd","id":5139030,"node_id":"MDQ6VXNlcjUxMzkwMzA=","avatar_url":"https://avatars3.githubusercontent.com/u/5139030?v=4","gravatar_id":"","url":"https://api.github.com/users/slidenerd","html_url":"https://github.com/slidenerd","followers_url":"https://api.github.com/users/slidenerd/followers","following_url":"https://api.github.com/users/slidenerd/following{/other_user}","gists_url":"https://api.github.com/users/slidenerd/gists{/gist_id}","starred_url":"https://api.github.com/users/slidenerd/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/slidenerd/subscriptions","organizations_url":"https://api.github.com/users/slidenerd/orgs","repos_url":"https://api.github.com/users/slidenerd/repos","events_url":"https://api.github.com/users/slidenerd/events{/privacy}","received_events_url":"https://api.github.com/users/slidenerd/received_events","type":"User","site_admin":false,"name":"slidenerd","company":"slidenerd","blog":"http://slidenerd.com","location":"Mumbai","email":"slidenerd@gmail.com","hireable":true,"bio":"Bots, AI, advanced web frameworks, ohlc applications, you name it! I build it!","public_repos":74,"public_gists":6,"followers":3231,"following":1,"created_at":"2013-08-01T14:17:19Z","updated_at":"2019-11-08T13:35:04Z"}',
-    _json: {
-        login: 'slidenerd',
-        id: 5139030,
-        node_id: 'MDQ6VXNlcjUxMzkwMzA=',
-        avatar_url: 'https://avatars3.githubusercontent.com/u/5139030?v=4',
-        gravatar_id: '',
-        url: 'https://api.github.com/users/slidenerd',
-        html_url: 'https://github.com/slidenerd',
-        followers_url: 'https://api.github.com/users/slidenerd/followers',
-        following_url: 'https://api.github.com/users/slidenerd/following{/other_user}',
-        gists_url: 'https://api.github.com/users/slidenerd/gists{/gist_id}',
-        starred_url: 'https://api.github.com/users/slidenerd/starred{/owner}{/repo}',
-        subscriptions_url: 'https://api.github.com/users/slidenerd/subscriptions',
-        organizations_url: 'https://api.github.com/users/slidenerd/orgs',
-        repos_url: 'https://api.github.com/users/slidenerd/repos',
-        events_url: 'https://api.github.com/users/slidenerd/events{/privacy}',
-        received_events_url: 'https://api.github.com/users/slidenerd/received_events',
-        type: 'User',
-        site_admin: false,
-        name: 'slidenerd',
-        company: 'slidenerd',
-        blog: 'http://slidenerd.com',
-        location: 'Mumbai',
-        email: 'slidenerd@gmail.com',
-        hireable: true,
-        bio: 'Bots, AI, advanced web frameworks, ohlc applications, you name it! I build it!',
-        public_repos: 74,
-        public_gists: 6,
-        followers: 3231,
-        following: 1,
-        created_at: '2013-08-01T14:17:19Z',
-        updated_at: '2019-11-08T13:35:04Z'
-    }
-}
-
-
-router.get('/auth/facebook/callback', (req, res, next) => {
-  passport.authenticate('facebook', (err, user, info) => {
-    console.log('facebook callback triggered', err, user, info)
-    if (err) {
-      return next(err)
-    }
-    if (!user) {
-      console.log(
-        'facebook authenticate user not found',
-        user,
-        info,
-        req.session,
-        req.user
-      )
-      return res.status(401).json({ message: info })
-    }
-    req.logIn(user, (err) => {
-      if (err) {
-        return next(err)
-      }
-      console.log(
-        'facebook authenticate user FOUND',
-        user,
-        info,
-        req.session,
-        req.user
-      )
-      res.header('e', new Date(req.session.cookie.expires).getTime())
-      return res.json(req.user)
-    })
-  })(req, res, next)
-})

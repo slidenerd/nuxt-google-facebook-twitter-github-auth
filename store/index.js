@@ -11,18 +11,17 @@ export const mutations = {
 export const actions = {
   // nuxtServerInit is called by Nuxt.js before server-rendering every page
   nuxtServerInit({ commit }, { req }) {
-    console.log(req.session.cookie.expires)
-    if (req.session && req.session.authUser) {
-      commit('SET_USER', req.session.authUser)
+    if (req.session && req.user) {
+      commit('SET_USER', req.user)
     }
   },
-  async login({ commit }, { username, password }) {
+  async login({ commit }, { email, password }) {
     try {
-      const { data } = await this.$axios.post('/auth/login', {
-        username,
+      const response = await this.$axios.post('/auth/login', {
+        email,
         password
       })
-      commit('SET_USER', data)
+      commit('SET_USER', response.data)
     } catch (error) {
       if (error.response && error.response.status === 401) {
         throw new Error('Bad credentials')
