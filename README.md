@@ -26,7 +26,7 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ### Objects
 #### Facebook Profile Object
-
+```
 {
     id: '5459754221345688',
     username: undefined,
@@ -50,8 +50,10 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
         id: '5459754221345688'
     }
 }
+```
 
 #### Twitter Profile Object
+```
 {
     id: '466421541215451645',
     username: 'username',
@@ -144,8 +146,10 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
     },
     _accessLevel: 'read-write'
 }
+```
 
 #### Google Profile Object
+```
 {
     provider: 'google',
     sub: '45684644664512633259',
@@ -183,9 +187,10 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
         locale: 'en'
     }
 }
+```
 
 #### GitHub Profile Object
-
+```
 {
     id: '3194523',
     displayName: 'dummyboy',
@@ -233,6 +238,7 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
         updated_at: '2019-11-08T13:35:04Z'
     }
 }
+```
 
 ## Resources
 ### Locations
